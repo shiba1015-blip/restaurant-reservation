@@ -3,24 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>レストラン予約システム</title>
+    <title>ベビーフェイスプラネッツ - ご予約</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B8941F;
+            --light-gold: #F7E98E;
+            --deep-navy: #1A1B3A;
+            --charcoal: #2C2C54;
+            --warm-white: #FEFCF3;
+            --cream: #F8F6F0;
+            --soft-gray: #E8E6E1;
+            --text-primary: #2C2C54;
+            --text-secondary: #6B6B84;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--charcoal) 100%);
             min-height: 100vh;
-            padding: 20px;
             position: relative;
+            overflow-x: hidden;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -29,281 +44,698 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 40% 40%, rgba(255, 204, 2, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
-        
+
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 680px;
+            margin: 60px auto;
+            background: var(--warm-white);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(26, 27, 58, 0.25),
+                0 0 0 1px rgba(212, 175, 55, 0.1);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
         }
-        
-        h1 {
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+            padding: 48px 40px 40px;
             text-align: center;
-            color: #ff6b35;
-            margin-bottom: 30px;
-            font-size: 28px;
-            text-shadow: 2px 2px 4px rgba(255, 107, 53, 0.1);
-            font-weight: 700;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #ff6b35;
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-        }
-        
-        .people-count {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .people-count .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        
-        .notice-box {
-            background: linear-gradient(135deg, #fff8f4 0%, #fffaf7 100%);
-            border: 2px solid #ff6b35;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        
-        .notice-box h3 {
-            color: #ff6b35;
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .notice-box ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        .notice-box li {
-            margin-bottom: 8px;
-            padding-left: 20px;
             position: relative;
         }
-        
-        .notice-box li:before {
-            content: "🌟";
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="%23ffffff" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--warm-white);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .subtitle {
+            color: rgba(254, 252, 243, 0.9);
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .form-container {
+            padding: 48px 40px;
+        }
+
+        .notice-card {
+            background: linear-gradient(135deg, var(--cream) 0%, var(--warm-white) 100%);
+            border: 1px solid var(--soft-gray);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .notice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .notice-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notice-title i {
+            color: var(--primary-gold);
+        }
+
+        .notice-list {
+            list-style: none;
+            space-y: 12px;
+        }
+
+        .notice-list li {
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .notice-list li::before {
+            content: '✦';
             position: absolute;
             left: 0;
-            color: #f7931e;
+            color: var(--primary-gold);
             font-weight: bold;
         }
-        
-        .submit-btn {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
+
+        .form-group {
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .form-group.half {
+            width: 48%;
+            display: inline-block;
+            margin-right: 4%;
+        }
+
+        .form-group.half:last-child {
+            margin-right: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        .required {
+            color: var(--primary-gold);
+            margin-left: 4px;
+        }
+
+        .form-input, .form-select {
             width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+            padding: 16px 20px;
+            border: 2px solid var(--soft-gray);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--warm-white);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-primary);
         }
-        
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(255, 107, 53, 0.4);
-            background: linear-gradient(135deg, #e55a2b 0%, #e0841a 50%, #e6b800 100%);
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 
+                0 0 0 4px rgba(212, 175, 55, 0.1),
+                0 8px 24px rgba(212, 175, 55, 0.15);
+            transform: translateY(-2px);
         }
-        
-        .time-slots {
+
+        .people-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
         }
-        
+
+        .time-slots-container {
+            margin-top: 16px;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
         .time-slot {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+            padding: 16px 12px;
+            border: 2px solid var(--soft-gray);
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            background: white;
+            background: var(--warm-white);
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            color: var(--text-primary);
         }
-        
+
         .time-slot:hover {
-            border-color: #ff6b35;
-            background: linear-gradient(135deg, #fff8f4 0%, #fffaf7 100%);
-            transform: scale(1.05);
+            border-color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
         }
-        
+
         .time-slot.selected {
-            border-color: #ff6b35;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            border-color: var(--primary-gold);
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+            color: var(--warm-white);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(212, 175, 55, 0.3);
         }
-        
+
         .time-slot.unavailable {
             background: #f5f5f5;
             color: #999;
             cursor: not-allowed;
+            opacity: 0.6;
         }
-        
+
+        .checkbox-section {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 40px 0;
+            border: 1px solid var(--soft-gray);
+        }
+
+        .checkbox-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox-title i {
+            color: var(--primary-gold);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--soft-gray);
+            border-radius: 4px;
+            margin-right: 16px;
+            margin-top: 2px;
+            position: relative;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + .custom-checkbox {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+            border-color: var(--primary-gold);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + .custom-checkbox::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+            color: var(--warm-white);
+            border: none;
+            padding: 20px 48px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 32px rgba(212, 175, 55, 0.25);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.35);
+            background: linear-gradient(135deg, var(--dark-gold) 0%, #A17B1A 100%);
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
         .success-message {
             display: none;
-            background: #d4edda;
-            color: #155724;
-            padding: 20px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #E8F5E8 0%, #F0FAF0 100%);
+            color: #2D5A2D;
+            padding: 32px;
+            border-radius: 16px;
             text-align: center;
-            font-weight: 600;
+            border: 2px solid #C8E6C8;
+            margin-top: 24px;
+        }
+
+        .success-message h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--soft-gray), transparent);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                border-radius: 16px;
+            }
+
+            .header {
+                padding: 32px 24px 24px;
+            }
+
+            .form-container {
+                padding: 32px 24px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .people-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .time-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .form-group.half {
+                width: 100%;
+                display: block;
+                margin-right: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.1);
+            }
+        }
+
+        .container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+            animation: shimmer 3s ease-in-out infinite;
+            background-size: 200% 100%;
+        }
+
+        .logo {
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        .form-group {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group:nth-child(odd) {
+            animation: slideInLeft 0.7s ease-out;
+        }
+
+        .form-group:nth-child(even) {
+            animation: slideInRight 0.7s ease-out;
+        }
+
+        .notice-card {
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .checkbox-section {
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .form-input, .form-select {
+            position: relative;
+        }
+
+        .form-input:focus, .form-select:focus {
+            animation: pulseGlow 1.5s ease-out;
+        }
+
+        .time-slot {
+            opacity: 0;
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+
+        .time-slot:nth-child(1) { animation-delay: 0.1s; }
+        .time-slot:nth-child(2) { animation-delay: 0.15s; }
+        .time-slot:nth-child(3) { animation-delay: 0.2s; }
+        .time-slot:nth-child(4) { animation-delay: 0.25s; }
+        .time-slot:nth-child(5) { animation-delay: 0.3s; }
+        .time-slot:nth-child(6) { animation-delay: 0.35s; }
+        .time-slot:nth-child(7) { animation-delay: 0.4s; }
+        .time-slot:nth-child(8) { animation-delay: 0.45s; }
+        .time-slot:nth-child(9) { animation-delay: 0.5s; }
+        .time-slot:nth-child(10) { animation-delay: 0.55s; }
+        .time-slot:nth-child(11) { animation-delay: 0.6s; }
+        .time-slot:nth-child(12) { animation-delay: 0.65s; }
+
+        .submit-button {
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .divider {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            animation: shimmer 2s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🍳 ご予約フォーム ✨</h1>
-        
-        <div class="notice-box">
-            <h3>⚠️ ご予約前にご確認ください</h3>
-            <ul>
-                <li>9名以上・コース・プレート・マット席（座敷）をご注文の方はお電話にてお願いします</li>
-                <li>ネット予約は前々日の21時までとなります</li>
-            </ul>
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                ベビーフェイス プラネッツ
+            </div>
+            <div class="subtitle">Reservation System</div>
         </div>
         
-        <form id="reservationForm">
-            <div class="form-group">
-                <label for="email">メールアドレス *</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="emailConfirm">メールアドレス（確認） *</label>
-                <input type="email" id="emailConfirm" name="emailConfirm" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="name">お名前 *</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="furigana">フリガナ *</label>
-                <input type="text" id="furigana" name="furigana" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">電話番号 *</label>
-                <input type="tel" id="phone" name="phone" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="date">ご希望日 *</label>
-                <input type="date" id="date" name="date" required min="">
-            </div>
-            
-            <div class="form-group">
-                <label>ご希望時間 *</label>
-                <div class="time-slots" id="timeSlots">
-                    <!-- 時間スロットは JavaScript で動的生成 -->
+        <div class="form-container">
+            <div class="notice-card">
+                <div class="notice-title">
+                    <i class="fas fa-info-circle"></i>
+                    ご予約前にご確認ください
                 </div>
-                <input type="hidden" id="selectedTime" name="selectedTime" required>
+                <ul class="notice-list">
+                    <li>9名以上・コース・プレート・マット席（座敷）をご注文の方はお電話にてお願いします</li>
+                    <li>ネット予約は前々日の21時までとなります</li>
+                </ul>
             </div>
             
-            <div class="people-count">
+            <form id="reservationForm">
                 <div class="form-group">
-                    <label for="adults">6歳以上 *</label>
-                    <select id="adults" name="adults" required>
-                        <option value="">選択してください</option>
-                        <option value="1">1名</option>
-                        <option value="2">2名</option>
-                        <option value="3">3名</option>
-                        <option value="4">4名</option>
-                        <option value="5">5名</option>
-                        <option value="6">6名</option>
-                        <option value="7">7名</option>
-                        <option value="8">8名</option>
-                    </select>
+                    <label class="form-label" for="email">
+                        <i class="fas fa-envelope"></i>
+                        メールアドレス<span class="required">*</span>
+                    </label>
+                    <input type="email" id="email" name="email" class="form-input" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="children">6歳以下</label>
-                    <select id="children" name="children">
-                        <option value="0">0名</option>
-                        <option value="1">1名</option>
-                        <option value="2">2名</option>
-                        <option value="3">3名</option>
-                        <option value="4">4名</option>
-                        <option value="5">5名</option>
-                    </select>
+                    <label class="form-label" for="emailConfirm">
+                        <i class="fas fa-envelope-open"></i>
+                        メールアドレス（確認）<span class="required">*</span>
+                    </label>
+                    <input type="email" id="emailConfirm" name="emailConfirm" class="form-input" required>
                 </div>
-            </div>
-            
-            <div class="notice-box">
-                <h3>📋 ご予約に関する注意事項（必ずご確認ください）</h3>
-                <div class="checkbox-group">
+
+                <div class="divider"></div>
+                
+                <div class="form-group half">
+                    <label class="form-label" for="name">
+                        <i class="fas fa-user"></i>
+                        お名前<span class="required">*</span>
+                    </label>
+                    <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+                
+                <div class="form-group half">
+                    <label class="form-label" for="furigana">
+                        <i class="fas fa-font"></i>
+                        フリガナ<span class="required">*</span>
+                    </label>
+                    <input type="text" id="furigana" name="furigana" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="phone">
+                        <i class="fas fa-phone"></i>
+                        電話番号<span class="required">*</span>
+                    </label>
+                    <input type="tel" id="phone" name="phone" class="form-input" required>
+                </div>
+
+                <div class="divider"></div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="date">
+                        <i class="fas fa-calendar-alt"></i>
+                        ご希望日<span class="required">*</span>
+                    </label>
+                    <input type="date" id="date" name="date" class="form-input" required min="">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-clock"></i>
+                        ご希望時間<span class="required">*</span>
+                    </label>
+                    <div class="time-slots-container">
+                        <div class="time-grid" id="timeSlots">
+                            <!-- 時間スロットは JavaScript で動的生成 -->
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedTime" name="selectedTime" required>
+                </div>
+                
+                <div class="people-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="adults">
+                            <i class="fas fa-users"></i>
+                            6歳以上<span class="required">*</span>
+                        </label>
+                        <select id="adults" name="adults" class="form-select" required>
+                            <option value="">選択してください</option>
+                            <option value="1">1名</option>
+                            <option value="2">2名</option>
+                            <option value="3">3名</option>
+                            <option value="4">4名</option>
+                            <option value="5">5名</option>
+                            <option value="6">6名</option>
+                            <option value="7">7名</option>
+                            <option value="8">8名</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="children">
+                            <i class="fas fa-child"></i>
+                            6歳以下
+                        </label>
+                        <select id="children" name="children" class="form-select">
+                            <option value="0">0名</option>
+                            <option value="1">1名</option>
+                            <option value="2">2名</option>
+                            <option value="3">3名</option>
+                            <option value="4">4名</option>
+                            <option value="5">5名</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="checkbox-section">
+                    <div class="checkbox-title">
+                        <i class="fas fa-clipboard-check"></i>
+                        ご予約に関する注意事項（必ずご確認ください）
+                    </div>
+                    
                     <label class="checkbox-item">
                         <input type="checkbox" id="check1" required>
-                        <span class="checkmark"></span>
+                        <div class="custom-checkbox"></div>
                         テーブルタイプのお席のみご予約可能であることを理解しました（マット席（座敷）をご希望の方は電話にてお願いいたします）
                     </label>
                     
                     <label class="checkbox-item">
                         <input type="checkbox" id="check2" required>
-                        <span class="checkmark"></span>
+                        <div class="custom-checkbox"></div>
                         予約時間から30分過ぎると予約が解除されることを理解しました
                     </label>
                     
                     <label class="checkbox-item">
                         <input type="checkbox" id="check3" required>
-                        <span class="checkmark"></span>
+                        <div class="custom-checkbox"></div>
                         駐車場が狭いため、なるべく乗り合わせで来店します
                     </label>
                 </div>
-            </div>
+                
+                <button type="submit" class="submit-button">
+                    <i class="fas fa-calendar-check"></i>
+                    予約を確定する
+                </button>
+            </form>
             
-            <button type="submit" class="submit-btn">予約を確定する</button>
-        </form>
-        
-        <div id="successMessage" class="success-message">
-            <h3>✅ ご予約ありがとうございます！</h3>
-            <p>確認メールをお送りしました。内容をご確認ください。<br>
-            ご不明な点がございましたらお電話にてお問い合わせください。</p>
+            <div id="successMessage" class="success-message">
+                <h3>
+                    <i class="fas fa-check-circle"></i>
+                    ご予約ありがとうございます！
+                </h3>
+                <p>確認メールをお送りしました。内容をご確認ください。<br>
+                ご不明な点がございましたらお電話にてお問い合わせください。</p>
+            </div>
         </div>
     </div>
 
@@ -331,16 +763,106 @@
             });
         }
         
-        // 時間選択
+        // 時間選択（アニメーション付き）
         function selectTime(element, time) {
-            // 既存の選択をクリア
+            if (element.classList.contains('unavailable')) return;
+            
+            // 既存の選択をクリア（滑らかに）
             document.querySelectorAll('.time-slot').forEach(slot => {
-                slot.classList.remove('selected');
+                if (slot.classList.contains('selected')) {
+                    slot.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    slot.classList.remove('selected');
+                }
             });
             
-            // 新しい選択を追加
-            element.classList.add('selected');
+            // 新しい選択を追加（少し遅延してアニメーション）
+            setTimeout(() => {
+                element.classList.add('selected');
+                element.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                // 軽やかな振動効果
+                element.style.animation = 'gentleFloat 0.6s ease-out';
+                setTimeout(() => {
+                    element.style.animation = '';
+                }, 600);
+            }, 100);
+            
             document.getElementById('selectedTime').value = time;
+        }
+        
+        // フォーム要素の段階的表示
+        function staggerFormElements() {
+            const elements = document.querySelectorAll('.form-group, .notice-card, .checkbox-section, .submit-button');
+            elements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+        
+        // 入力フィールドのフォーカスアニメーション
+        function addInputAnimations() {
+            const inputs = document.querySelectorAll('.form-input, .form-select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    
+                    // 隣接ラベルの軽やかな動き
+                    const label = this.closest('.form-group').querySelector('.form-label');
+                    if (label) {
+                        label.style.transition = 'all 0.3s ease';
+                        label.style.transform = 'translateY(-2px)';
+                        label.style.color = 'var(--primary-gold)';
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    const label = this.closest('.form-group').querySelector('.form-label');
+                    if (label) {
+                        label.style.transform = 'translateY(0)';
+                        label.style.color = 'var(--text-primary)';
+                    }
+                });
+            });
+        }
+        
+        // チェックボックスアニメーション
+        function addCheckboxAnimations() {
+            const checkboxes = document.querySelectorAll('.checkbox-item');
+            
+            checkboxes.forEach(checkbox => {
+                const input = checkbox.querySelector('input[type="checkbox"]');
+                const customCheckbox = checkbox.querySelector('.custom-checkbox');
+                
+                input.addEventListener('change', function() {
+                    if (this.checked) {
+                        customCheckbox.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            customCheckbox.style.transform = 'scale(1)';
+                        }, 150);
+                    }
+                });
+            });
+        }
+        
+        // 送信ボタンのアニメーション
+        function addSubmitButtonAnimation() {
+            const submitButton = document.querySelector('.submit-button');
+            
+            submitButton.addEventListener('click', function(e) {
+                if (this.closest('form').checkValidity()) {
+                    // 送信時のロードアニメーション
+                    this.style.background = 'linear-gradient(135deg, var(--dark-gold) 0%, #A17B1A 100%)';
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 処理中...';
+                    this.style.pointerEvents = 'none';
+                }
+            });
         }
         
         // 日付の最小値を設定（明後日から）
@@ -405,18 +927,51 @@
             
             console.log('予約データ:', formData);
             
-            // 成功メッセージ表示
-            document.getElementById('reservationForm').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
+            // 成功メッセージ表示（優雅なアニメーション付き）
+            const form = document.getElementById('reservationForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            // フォームをフェードアウト
+            form.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            form.style.opacity = '0';
+            form.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                form.style.display = 'none';
+                successMessage.style.display = 'block';
+                successMessage.style.opacity = '0';
+                successMessage.style.transform = 'translateY(30px)';
+                
+                // 成功メッセージをフェードイン
+                setTimeout(() => {
+                    successMessage.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    successMessage.style.opacity = '1';
+                    successMessage.style.transform = 'translateY(0)';
+                    
+                    // アイコンに軽やかな回転を追加
+                    const icon = successMessage.querySelector('i');
+                    if (icon) {
+                        icon.style.animation = 'gentleFloat 2s ease-in-out infinite';
+                    }
+                }, 100);
+            }, 500);
             
             // 実際の運用では、ここでサーバーにデータを送信
             // sendReservationData(formData);
         });
         
-        // 初期化
+        // 初期化（アニメーション付き）
         document.addEventListener('DOMContentLoaded', function() {
             generateTimeSlots();
             setMinDate();
+            
+            // アニメーション初期化
+            setTimeout(() => {
+                staggerFormElements();
+                addInputAnimations();
+                addCheckboxAnimations();
+                addSubmitButtonAnimation();
+            }, 300);
         });
     </script>
 </body>
