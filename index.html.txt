@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レストラン予約システム</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 40% 40%, rgba(255, 204, 2, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #ff6b35;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(255, 107, 53, 0.1);
+            font-weight: 700;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .people-count {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .people-count .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .notice-box {
+            background: linear-gradient(135deg, #fff8f4 0%, #fffaf7 100%);
+            border: 2px solid #ff6b35;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .notice-box h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .notice-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .notice-box li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .notice-box li:before {
+            content: "🌟";
+            position: absolute;
+            left: 0;
+            color: #f7931e;
+            font-weight: bold;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #e55a2b 0%, #e0841a 50%, #e6b800 100%);
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .time-slot {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .time-slot:hover {
+            border-color: #ff6b35;
+            background: linear-gradient(135deg, #fff8f4 0%, #fffaf7 100%);
+            transform: scale(1.05);
+        }
+        
+        .time-slot.selected {
+            border-color: #ff6b35;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .time-slot.unavailable {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 ご予約フォーム ✨</h1>
+        
+        <div class="notice-box">
+            <h3>⚠️ ご予約前にご確認ください</h3>
+            <ul>
+                <li>9名以上・コース・プレート・マット席（座敷）をご注文の方はお電話にてお願いします</li>
+                <li>ネット予約は前々日の21時までとなります</li>
+            </ul>
+        </div>
+        
+        <form id="reservationForm">
+            <div class="form-group">
+                <label for="email">メールアドレス *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="emailConfirm">メールアドレス（確認） *</label>
+                <input type="email" id="emailConfirm" name="emailConfirm" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">お名前 *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="furigana">フリガナ *</label>
+                <input type="text" id="furigana" name="furigana" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">電話番号 *</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">ご希望日 *</label>
+                <input type="date" id="date" name="date" required min="">
+            </div>
+            
+            <div class="form-group">
+                <label>ご希望時間 *</label>
+                <div class="time-slots" id="timeSlots">
+                    <!-- 時間スロットは JavaScript で動的生成 -->
+                </div>
+                <input type="hidden" id="selectedTime" name="selectedTime" required>
+            </div>
+            
+            <div class="people-count">
+                <div class="form-group">
+                    <label for="adults">6歳以上 *</label>
+                    <select id="adults" name="adults" required>
+                        <option value="">選択してください</option>
+                        <option value="1">1名</option>
+                        <option value="2">2名</option>
+                        <option value="3">3名</option>
+                        <option value="4">4名</option>
+                        <option value="5">5名</option>
+                        <option value="6">6名</option>
+                        <option value="7">7名</option>
+                        <option value="8">8名</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="children">6歳以下</label>
+                    <select id="children" name="children">
+                        <option value="0">0名</option>
+                        <option value="1">1名</option>
+                        <option value="2">2名</option>
+                        <option value="3">3名</option>
+                        <option value="4">4名</option>
+                        <option value="5">5名</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="notice-box">
+                <h3>📋 ご予約に関する注意事項（必ずご確認ください）</h3>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="check1" required>
+                        <span class="checkmark"></span>
+                        テーブルタイプのお席のみご予約可能であることを理解しました（マット席（座敷）をご希望の方は電話にてお願いいたします）
+                    </label>
+                    
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="check2" required>
+                        <span class="checkmark"></span>
+                        予約時間から30分過ぎると予約が解除されることを理解しました
+                    </label>
+                    
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="check3" required>
+                        <span class="checkmark"></span>
+                        駐車場が狭いため、なるべく乗り合わせで来店します
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">予約を確定する</button>
+        </form>
+        
+        <div id="successMessage" class="success-message">
+            <h3>✅ ご予約ありがとうございます！</h3>
+            <p>確認メールをお送りしました。内容をご確認ください。<br>
+            ご不明な点がございましたらお電話にてお問い合わせください。</p>
+        </div>
+    </div>
+
+    <script>
+        // 時間スロット生成
+        function generateTimeSlots() {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const times = [];
+            
+            // 10:00-20:30の30分刻み
+            for (let hour = 10; hour <= 20; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    if (hour === 20 && minute > 30) break;
+                    const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    times.push(timeString);
+                }
+            }
+            
+            times.forEach(time => {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                timeSlot.textContent = time;
+                timeSlot.addEventListener('click', () => selectTime(timeSlot, time));
+                timeSlotsContainer.appendChild(timeSlot);
+            });
+        }
+        
+        // 時間選択
+        function selectTime(element, time) {
+            // 既存の選択をクリア
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // 新しい選択を追加
+            element.classList.add('selected');
+            document.getElementById('selectedTime').value = time;
+        }
+        
+        // 日付の最小値を設定（明後日から）
+        function setMinDate() {
+            const today = new Date();
+            const dayAfterTomorrow = new Date(today);
+            dayAfterTomorrow.setDate(today.getDate() + 2);
+            
+            const dateInput = document.getElementById('date');
+            dateInput.min = dayAfterTomorrow.toISOString().split('T')[0];
+        }
+        
+        // フォーム送信処理
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // メールアドレス確認
+            const email = document.getElementById('email').value;
+            const emailConfirm = document.getElementById('emailConfirm').value;
+            
+            if (email !== emailConfirm) {
+                alert('メールアドレスが一致しません。もう一度ご確認ください。');
+                return;
+            }
+            
+            // バリデーション
+            const adults = parseInt(document.getElementById('adults').value) || 0;
+            const children = parseInt(document.getElementById('children').value) || 0;
+            const totalPeople = adults + children;
+            
+            if (totalPeople >= 9) {
+                alert('9名以上のご予約はお電話にてお願いします。');
+                return;
+            }
+            
+            if (!document.getElementById('selectedTime').value) {
+                alert('ご希望時間を選択してください。');
+                return;
+            }
+            
+            // チェックボックス確認
+            const checks = ['check1', 'check2', 'check3'];
+            for (let checkId of checks) {
+                if (!document.getElementById(checkId).checked) {
+                    alert('すべての注意事項にご同意いただく必要があります。');
+                    return;
+                }
+            }
+            
+            // 予約データ収集
+            const formData = {
+                email: email,
+                name: document.getElementById('name').value,
+                furigana: document.getElementById('furigana').value,
+                phone: document.getElementById('phone').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('selectedTime').value,
+                adults: adults,
+                children: children,
+                totalPeople: totalPeople
+            };
+            
+            console.log('予約データ:', formData);
+            
+            // 成功メッセージ表示
+            document.getElementById('reservationForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // 実際の運用では、ここでサーバーにデータを送信
+            // sendReservationData(formData);
+        });
+        
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            generateTimeSlots();
+            setMinDate();
+        });
+    </script>
+</body>
+</html>
