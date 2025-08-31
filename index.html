@@ -6,6 +6,7 @@
     <title>ベビーフェイスプラネッツ - ご予約</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.38.0/index.umd.js"></script>
     <style>
         :root {
             --primary-gold: #D4AF37;
@@ -351,6 +352,12 @@
             overflow: hidden;
         }
 
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .submit-button::before {
             content: '';
             position: absolute;
@@ -362,7 +369,7 @@
             transition: left 0.6s;
         }
 
-        .submit-button:hover {
+        .submit-button:hover:not(:disabled) {
             transform: translateY(-4px);
             box-shadow: 0 20px 40px rgba(212, 175, 55, 0.35);
             background: linear-gradient(135deg, var(--dark-gold) 0%, #A17B1A 100%);
@@ -391,6 +398,17 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
+        }
+
+        .error-message {
+            display: none;
+            background: linear-gradient(135deg, #FEE2E2 0%, #FEF2F2 100%);
+            color: #DC2626;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #F87171;
+            margin-top: 24px;
         }
 
         .divider {
@@ -431,146 +449,6 @@
                 display: block;
                 margin-right: 0;
             }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes gentleFloat {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-            100% {
-                background-position: 200% 0;
-            }
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.1);
-            }
-        }
-
-        .container {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
-            animation: shimmer 3s ease-in-out infinite;
-            background-size: 200% 100%;
-        }
-
-        .logo {
-            animation: gentleFloat 4s ease-in-out infinite;
-        }
-
-        .form-group {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .form-group:nth-child(odd) {
-            animation: slideInLeft 0.7s ease-out;
-        }
-
-        .form-group:nth-child(even) {
-            animation: slideInRight 0.7s ease-out;
-        }
-
-        .notice-card {
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-
-        .checkbox-section {
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-
-        .form-input, .form-select {
-            position: relative;
-        }
-
-        .form-input:focus, .form-select:focus {
-            animation: pulseGlow 1.5s ease-out;
-        }
-
-        .time-slot {
-            opacity: 0;
-            animation: fadeInUp 0.4s ease-out forwards;
-        }
-
-        .time-slot:nth-child(1) { animation-delay: 0.1s; }
-        .time-slot:nth-child(2) { animation-delay: 0.15s; }
-        .time-slot:nth-child(3) { animation-delay: 0.2s; }
-        .time-slot:nth-child(4) { animation-delay: 0.25s; }
-        .time-slot:nth-child(5) { animation-delay: 0.3s; }
-        .time-slot:nth-child(6) { animation-delay: 0.35s; }
-        .time-slot:nth-child(7) { animation-delay: 0.4s; }
-        .time-slot:nth-child(8) { animation-delay: 0.45s; }
-        .time-slot:nth-child(9) { animation-delay: 0.5s; }
-        .time-slot:nth-child(10) { animation-delay: 0.55s; }
-        .time-slot:nth-child(11) { animation-delay: 0.6s; }
-        .time-slot:nth-child(12) { animation-delay: 0.65s; }
-
-        .submit-button {
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-
-        .divider {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
-            animation: shimmer 2s ease-in-out infinite;
         }
     </style>
 </head>
@@ -722,7 +600,7 @@
                     </label>
                 </div>
                 
-                <button type="submit" class="submit-button">
+                <button type="submit" class="submit-button" id="submitButton">
                     <i class="fas fa-calendar-check"></i>
                     予約を確定する
                 </button>
@@ -733,13 +611,28 @@
                     <i class="fas fa-check-circle"></i>
                     ご予約ありがとうございます！
                 </h3>
-                <p>確認メールをお送りしました。内容をご確認ください。<br>
-                ご不明な点がございましたらお電話にてお問い合わせください。</p>
+                <p>ご予約を承りました。ご不明な点がございましたらお電話にてお問い合わせください。</p>
+            </div>
+
+            <div id="errorMessage" class="error-message">
+                <h3>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    予約の送信に失敗しました
+                </h3>
+                <p>申し訳ございません。しばらく時間をおいて再度お試しいただくか、お電話にてお問い合わせください。</p>
             </div>
         </div>
     </div>
 
     <script>
+        // Supabase設定 - 実際の値に置き換えてください
+        const SUPABASE_URL = 'https://dulcjbgrgiwxtfgxumko.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1bGNqYmdyZ2l3eHRmZ3h1bWtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5NjM1NjUsImV4cCI6MjA3MTUzOTU2NX0.8AWwBsjOeWHJ0HCKrnx2Uq-JMSkWZCiIa6dQ97P3hC4';
+        
+        // Supabaseクライアント初期化
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // 時間スロット生成
         function generateTimeSlots() {
             const timeSlotsContainer = document.getElementById('timeSlots');
@@ -763,106 +656,18 @@
             });
         }
         
-        // 時間選択（アニメーション付き）
+        // 時間選択
         function selectTime(element, time) {
             if (element.classList.contains('unavailable')) return;
             
-            // 既存の選択をクリア（滑らかに）
+            // 既存の選択をクリア
             document.querySelectorAll('.time-slot').forEach(slot => {
-                if (slot.classList.contains('selected')) {
-                    slot.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                    slot.classList.remove('selected');
-                }
+                slot.classList.remove('selected');
             });
             
-            // 新しい選択を追加（少し遅延してアニメーション）
-            setTimeout(() => {
-                element.classList.add('selected');
-                element.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-                
-                // 軽やかな振動効果
-                element.style.animation = 'gentleFloat 0.6s ease-out';
-                setTimeout(() => {
-                    element.style.animation = '';
-                }, 600);
-            }, 100);
-            
+            // 新しい選択を追加
+            element.classList.add('selected');
             document.getElementById('selectedTime').value = time;
-        }
-        
-        // フォーム要素の段階的表示
-        function staggerFormElements() {
-            const elements = document.querySelectorAll('.form-group, .notice-card, .checkbox-section, .submit-button');
-            elements.forEach((element, index) => {
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        }
-        
-        // 入力フィールドのフォーカスアニメーション
-        function addInputAnimations() {
-            const inputs = document.querySelectorAll('.form-input, .form-select');
-            
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                    
-                    // 隣接ラベルの軽やかな動き
-                    const label = this.closest('.form-group').querySelector('.form-label');
-                    if (label) {
-                        label.style.transition = 'all 0.3s ease';
-                        label.style.transform = 'translateY(-2px)';
-                        label.style.color = 'var(--primary-gold)';
-                    }
-                });
-                
-                input.addEventListener('blur', function() {
-                    const label = this.closest('.form-group').querySelector('.form-label');
-                    if (label) {
-                        label.style.transform = 'translateY(0)';
-                        label.style.color = 'var(--text-primary)';
-                    }
-                });
-            });
-        }
-        
-        // チェックボックスアニメーション
-        function addCheckboxAnimations() {
-            const checkboxes = document.querySelectorAll('.checkbox-item');
-            
-            checkboxes.forEach(checkbox => {
-                const input = checkbox.querySelector('input[type="checkbox"]');
-                const customCheckbox = checkbox.querySelector('.custom-checkbox');
-                
-                input.addEventListener('change', function() {
-                    if (this.checked) {
-                        customCheckbox.style.transform = 'scale(1.1)';
-                        setTimeout(() => {
-                            customCheckbox.style.transform = 'scale(1)';
-                        }, 150);
-                    }
-                });
-            });
-        }
-        
-        // 送信ボタンのアニメーション
-        function addSubmitButtonAnimation() {
-            const submitButton = document.querySelector('.submit-button');
-            
-            submitButton.addEventListener('click', function(e) {
-                if (this.closest('form').checkValidity()) {
-                    // 送信時のロードアニメーション
-                    this.style.background = 'linear-gradient(135deg, var(--dark-gold) 0%, #A17B1A 100%)';
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 処理中...';
-                    this.style.pointerEvents = 'none';
-                }
-            });
         }
         
         // 日付の最小値を設定（明後日から）
@@ -874,104 +679,97 @@
             const dateInput = document.getElementById('date');
             dateInput.min = dayAfterTomorrow.toISOString().split('T')[0];
         }
-        
+
         // フォーム送信処理
-        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+        document.getElementById('reservationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // メールアドレス確認
-            const email = document.getElementById('email').value;
-            const emailConfirm = document.getElementById('emailConfirm').value;
-            
-            if (email !== emailConfirm) {
-                alert('メールアドレスが一致しません。もう一度ご確認ください。');
-                return;
-            }
-            
-            // バリデーション
-            const adults = parseInt(document.getElementById('adults').value) || 0;
-            const children = parseInt(document.getElementById('children').value) || 0;
-            const totalPeople = adults + children;
-            
-            if (totalPeople >= 9) {
-                alert('9名以上のご予約はお電話にてお願いします。');
-                return;
-            }
-            
-            if (!document.getElementById('selectedTime').value) {
-                alert('ご希望時間を選択してください。');
-                return;
-            }
-            
-            // チェックボックス確認
-            const checks = ['check1', 'check2', 'check3'];
-            for (let checkId of checks) {
-                if (!document.getElementById(checkId).checked) {
-                    alert('すべての注意事項にご同意いただく必要があります。');
-                    return;
-                }
-            }
-            
-            // 予約データ収集
-            const formData = {
-                email: email,
-                name: document.getElementById('name').value,
-                furigana: document.getElementById('furigana').value,
-                phone: document.getElementById('phone').value,
-                date: document.getElementById('date').value,
-                time: document.getElementById('selectedTime').value,
-                adults: adults,
-                children: children,
-                totalPeople: totalPeople
-            };
-            
-            console.log('予約データ:', formData);
-            
-            // 成功メッセージ表示（優雅なアニメーション付き）
-            const form = document.getElementById('reservationForm');
+            const submitButton = document.getElementById('submitButton');
             const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
             
-            // フォームをフェードアウト
-            form.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-            form.style.opacity = '0';
-            form.style.transform = 'translateY(-20px)';
+            // ボタンを無効化
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 送信中...';
             
-            setTimeout(() => {
-                form.style.display = 'none';
-                successMessage.style.display = 'block';
-                successMessage.style.opacity = '0';
-                successMessage.style.transform = 'translateY(30px)';
+            try {
+                // メールアドレス確認
+                const email = document.getElementById('email').value;
+                const emailConfirm = document.getElementById('emailConfirm').value;
                 
-                // 成功メッセージをフェードイン
-                setTimeout(() => {
-                    successMessage.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                    successMessage.style.opacity = '1';
-                    successMessage.style.transform = 'translateY(0)';
-                    
-                    // アイコンに軽やかな回転を追加
-                    const icon = successMessage.querySelector('i');
-                    if (icon) {
-                        icon.style.animation = 'gentleFloat 2s ease-in-out infinite';
+                if (email !== emailConfirm) {
+                    throw new Error('メールアドレスが一致しません。もう一度ご確認ください。');
+                }
+                
+                // バリデーション
+                const adults = parseInt(document.getElementById('adults').value) || 0;
+                const children = parseInt(document.getElementById('children').value) || 0;
+                const totalPeople = adults + children;
+                
+                if (totalPeople >= 9) {
+                    throw new Error('9名以上のご予約はお電話にてお願いします。');
+                }
+                
+                if (!document.getElementById('selectedTime').value) {
+                    throw new Error('ご希望時間を選択してください。');
+                }
+                
+                // チェックボックス確認
+                const checks = ['check1', 'check2', 'check3'];
+                for (let checkId of checks) {
+                    if (!document.getElementById(checkId).checked) {
+                        throw new Error('すべての注意事項にご同意いただく必要があります。');
                     }
-                }, 100);
-            }, 500);
-            
-            // 実際の運用では、ここでサーバーにデータを送信
-            // sendReservationData(formData);
+                }
+                
+                // 予約データ作成
+                const reservationData = {
+                    email: email,
+                    email_confirm: emailConfirm,
+                    name: document.getElementById('name').value,
+                    furigana: document.getElementById('furigana').value,
+                    phone: document.getElementById('phone').value,
+                    reservation_date: document.getElementById('date').value,
+                    reservation_time: document.getElementById('selectedTime').value + ':00',
+                    adults: adults,
+                    children: children,
+                    status: 'confirmed'
+                };
+                
+                // Supabaseにデータを送信
+                const { data, error } = await supabaseClient
+                    .from('reservations')
+                    .insert([reservationData]);
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // 成功時の処理
+                document.getElementById('reservationForm').style.display = 'none';
+                successMessage.style.display = 'block';
+                
+            } catch (error) {
+                console.error('予約送信エラー:', error);
+                
+                // エラーメッセージを表示
+                if (error.message.includes('メール') || error.message.includes('名以上') || 
+                    error.message.includes('時間') || error.message.includes('注意事項')) {
+                    alert(error.message);
+                } else {
+                    errorMessage.style.display = 'block';
+                }
+            } finally {
+                // ボタンを再有効化
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-calendar-check"></i> 予約を確定する';
+            }
         });
         
-        // 初期化（アニメーション付き）
+        // 初期化
         document.addEventListener('DOMContentLoaded', function() {
             generateTimeSlots();
             setMinDate();
-            
-            // アニメーション初期化
-            setTimeout(() => {
-                staggerFormElements();
-                addInputAnimations();
-                addCheckboxAnimations();
-                addSubmitButtonAnimation();
-            }, 300);
         });
     </script>
 </body>
